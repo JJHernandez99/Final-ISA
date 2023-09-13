@@ -160,7 +160,7 @@ describe('BorrowedBook e2e test', () => {
     });
 
     it('should create an instance of BorrowedBook', () => {
-      cy.get(`[data-cy="borrowDate"]`).type('2023-09-05').blur().should('have.value', '2023-09-05');
+      cy.get(`[data-cy="borrowDate"]`).type('2023-09-06').blur().should('have.value', '2023-09-06');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

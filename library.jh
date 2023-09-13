@@ -4,8 +4,7 @@ application {
     applicationType monolith,
     authenticationType jwt
     packageName com.ar.edu.um.library,
-    prodDatabaseType mariadb,
-    cacheProvider hazelcast,
+    cacheProvider no,
     buildTool maven,
     clientFramework angular,
     testFrameworks [cypress],
@@ -63,3 +62,4 @@ filter Book, Client, Author, BorrowedBook, Publisher
 paginate Book, Client, Author, BorrowedBook, Publisher with pagination
 
 service all with serviceImpl
+dto * with mapstruct

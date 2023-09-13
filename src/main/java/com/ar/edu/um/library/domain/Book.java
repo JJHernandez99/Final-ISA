@@ -6,15 +6,12 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Book.
  */
 @Entity
 @Table(name = "book")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Book implements Serializable {
 
@@ -58,7 +55,6 @@ public class Book implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "rel_book__author", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "books" }, allowSetters = true)
     private Set<Author> authors = new HashSet<>();
 

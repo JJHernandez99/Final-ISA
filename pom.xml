@@ -117,10 +117,6 @@
             <artifactId>javax.annotation-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-cache</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
         </dependency>
@@ -135,18 +131,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-hibernate53</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -164,10 +148,6 @@
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
             <version>${jackson-databind-nullable.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -606,7 +586,6 @@
                             </entrypoint>
                             <ports>
                                 <port>8080</port>
-                                <port>5701/udp</port>
                             </ports>
                             <environment>
                                 <SPRING_OUTPUT_ANSI_ENABLED>ALWAYS</SPRING_OUTPUT_ANSI_ENABLED>
@@ -972,7 +951,7 @@
                         <artifactId>maven-compiler-plugin</artifactId>
                         <configuration>
                             <testExcludes>
-                                <testExclude>com/ar/edu/um/library/config/MariadbTestContainer.java</testExclude>
+                                <testExclude>com/ar/edu/um/library/config/PostgreSqlTestContainer.java</testExclude>
                             </testExcludes>
                         </configuration>
                     </plugin>
@@ -1068,12 +1047,12 @@
             <dependencies>
                 <dependency>
                     <groupId>org.testcontainers</groupId>
-                    <artifactId>mariadb</artifactId>
+                    <artifactId>postgresql</artifactId>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.mariadb.jdbc</groupId>
-                    <artifactId>mariadb-java-client</artifactId>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
                 </dependency>
             </dependencies>
             <build>
@@ -1117,12 +1096,12 @@
                             <configuration>
                                 <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>
                                 <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
-                                <driver>org.mariadb.jdbc.Driver</driver>
-                                <url>jdbc:mariadb://localhost:3306/library</url>
+                                <driver>org.postgresql.Driver</driver>
+                                <url>jdbc:postgresql://localhost:5432/library</url>
                                 <defaultSchemaName></defaultSchemaName>
-                                <username></username>
+                                <username>library</username>
                                 <password></password>
-                                <referenceUrl>hibernate:spring:com.ar.edu.um.library.domain?dialect=org.hibernate.dialect.MariaDB103Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
+                                <referenceUrl>hibernate:spring:com.ar.edu.um.library.domain?dialect=tech.jhipster.domain.util.FixedPostgreSQL10Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
                                 <verbose>true</verbose>
                                 <logging>debug</logging>
                                 <contexts>!test</contexts>
@@ -1147,6 +1126,11 @@
                                     <groupId>javax.validation</groupId>
                                     <artifactId>validation-api</artifactId>
                                     <version>${validation-api.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>tech.jhipster</groupId>
+                                    <artifactId>jhipster-framework</artifactId>
+                                    <version>${jhipster-dependencies.version}</version>
                                 </dependency>
                             </dependencies>
                         </plugin>

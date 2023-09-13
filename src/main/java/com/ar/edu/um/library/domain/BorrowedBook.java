@@ -4,15 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDate;
 import javax.persistence.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A BorrowedBook.
  */
 @Entity
 @Table(name = "borrowed_book")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class BorrowedBook implements Serializable {
 

@@ -3,15 +3,12 @@ package com.ar.edu.um.library.domain;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Publisher.
  */
 @Entity
 @Table(name = "publisher")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Publisher implements Serializable {
 

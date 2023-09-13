@@ -66,10 +66,6 @@ server:
 # ===================================================================
 
 jhipster:
-  cache: # Cache configuration
-    hazelcast: # Hazelcast distributed cache
-      time-to-live-seconds: 3600
-      backup-count: 1
   # CORS is only enabled by default with the "dev" profile
   cors:
     # Allow Ionic for JHipster by default (* no longer allowed in Spring Boot 2.4+)
@@ -85,7 +81,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: ODBhZjk0YjEwYTY3ZjhmYTIwYWEzZGRhN2FlZjE4OGY3OWJjYmI5MzQzMDRhNTZmNjAzN2U0ZDgyZDhmZTZjYTJiNWQ4OGEyMGY3MjE1MTI0ZWY1MzE1ODQ2MmVkYWEwMDkyMjQyYmRhNDVjMjMwZjE0ODYyM2RlZTg4ODVlMGY=
+        base64-secret: NjcwYzEwMjVmMjk4ZjlhZTE5ODczZDY3NTg5OTRmYTY4YTBiMDE3OTQzODM1YjJiMTIzNWI0NTlkMGQzYjk4MjI3NzcyN2QwYmE1ZGFlY2IzNGYyMWI5ZjRiNDI2NDA3MzZiNmQxYWJkNDNkYzI3ZTkwYmI3MTliMmU3NjVhYjY=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

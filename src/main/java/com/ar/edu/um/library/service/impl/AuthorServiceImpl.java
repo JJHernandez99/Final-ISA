@@ -3,6 +3,8 @@ package com.ar.edu.um.library.service.impl;
 import com.ar.edu.um.library.domain.Author;
 import com.ar.edu.um.library.repository.AuthorRepository;
 import com.ar.edu.um.library.service.AuthorService;
+import com.ar.edu.um.library.service.dto.AuthorDTO;
+import com.ar.edu.um.library.service.mapper.AuthorMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,53 +24,56 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
 
-    public AuthorServiceImpl(AuthorRepository authorRepository) {
+    private final AuthorMapper authorMapper;
+
+    public AuthorServiceImpl(AuthorRepository authorRepository, AuthorMapper authorMapper) {
         this.authorRepository = authorRepository;
+        this.authorMapper = authorMapper;
     }
 
     @Override
-    public Author save(Author author) {
-        log.debug("Request to save Author : {}", author);
-        return authorRepository.save(author);
+    public AuthorDTO save(AuthorDTO authorDTO) {
+        log.debug("Request to save Author : {}", authorDTO);
+        Author author = authorMapper.toEntity(authorDTO);
+        author = authorRepository.save(author);
+        return authorMapper.toDto(author);
     }
 
     @Override
-    public Author update(Author author) {
-        log.debug("Request to update Author : {}", author);
-        return authorRepository.save(author);
+    public AuthorDTO update(AuthorDTO authorDTO) {
+        log.debug("Request to update Author : {}", authorDTO);
+        Author author = authorMapper.toEntity(authorDTO);
+        author = authorRepository.save(author);
+        return authorMapper.toDto(author);
     }
 
     @Override
-    public Optional<Author> partialUpdate(Author author) {
-        log.debug("Request to partially update Author : {}", author);
+    public Optional<AuthorDTO> partialUpdate(AuthorDTO authorDTO) {
+        log.debug("Request to partially update Author : {}", authorDTO);
 
         return authorRepository
-            .findById(author.getId())
+            .findById(authorDTO.getId())
             .map(existingAuthor -> {
-                if (author.getFirstName() != null) {
-                    existingAuthor.setFirstName(author.getFirstName());
-                }
-                if (author.getLastName() != null) {
-                    existingAuthor.setLastName(author.getLastName());
-                }
+                authorMapper.partialUpdate(existingAuthor, authorDTO);
 
                 return existingAuthor;
             })
-            .map(authorRepository::save);
+            .map(authorRepository::save)
+            .map(authorMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Author> findAll(Pageable pageable) {
+    public Page<AuthorDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Authors");
-        return authorRepository.findAll(pageable);
+        return authorRepository.findAll(pageable).map(authorMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Author> findOne(Long id) {
+    public Optional<AuthorDTO> findOne(Long id) {
         log.debug("Request to get Author : {}", id);
-        return authorRepository.findById(id);
+        return authorRepository.findById(id).map(authorMapper::toDto);
     }
 
     @Override

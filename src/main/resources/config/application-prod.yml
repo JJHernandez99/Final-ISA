@@ -33,18 +33,14 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mariadb://localhost:3306/library?useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: root
+    url: jdbc:postgresql://localhost:5432/library
+    username: library
     password:
     hikari:
       poolName: Hikari
       auto-commit: false
-      data-source-properties:
-        cachePrepStmts: true
-        prepStmtCacheSize: 250
-        prepStmtCacheSqlLimit: 2048
-        useServerPrepStmts: true
   jpa:
+    database-platform: tech.jhipster.domain.util.FixedPostgreSQL10Dialect
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
     contexts: prod
@@ -93,10 +89,6 @@ jhipster:
   http:
     cache: # Used by the CachingHttpHeadersFilter
       timeToLiveInDays: 1461
-  cache: # Cache configuration
-    hazelcast: # Hazelcast distributed cache
-      time-to-live-seconds: 3600
-      backup-count: 1
   security:
     authentication:
       jwt:
@@ -105,7 +97,7 @@ jhipster:
         # - In the JHipster Registry (which includes a Spring Cloud Config server)
         # - In a separate `application-prod.yml` file, in the same folder as your executable JAR file
         # - In the `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET` environment variable
-        base64-secret: ODBhZjk0YjEwYTY3ZjhmYTIwYWEzZGRhN2FlZjE4OGY3OWJjYmI5MzQzMDRhNTZmNjAzN2U0ZDgyZDhmZTZjYTJiNWQ4OGEyMGY3MjE1MTI0ZWY1MzE1ODQ2MmVkYWEwMDkyMjQyYmRhNDVjMjMwZjE0ODYyM2RlZTg4ODVlMGY=
+        base64-secret: NjcwYzEwMjVmMjk4ZjlhZTE5ODczZDY3NTg5OTRmYTY4YTBiMDE3OTQzODM1YjJiMTIzNWI0NTlkMGQzYjk4MjI3NzcyN2QwYmE1ZGFlY2IzNGYyMWI5ZjRiNDI2NDA3MzZiNmQxYWJkNDNkYzI3ZTkwYmI3MTliMmU3NjVhYjY=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

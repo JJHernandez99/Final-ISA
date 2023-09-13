@@ -3,6 +3,8 @@ package com.ar.edu.um.library.service.impl;
 import com.ar.edu.um.library.domain.Book;
 import com.ar.edu.um.library.repository.BookRepository;
 import com.ar.edu.um.library.service.BookService;
+import com.ar.edu.um.library.service.dto.BookDTO;
+import com.ar.edu.um.library.service.mapper.BookMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,69 +24,60 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
-    public BookServiceImpl(BookRepository bookRepository) {
+    private final BookMapper bookMapper;
+
+    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper) {
         this.bookRepository = bookRepository;
+        this.bookMapper = bookMapper;
     }
 
     @Override
-    public Book save(Book book) {
-        log.debug("Request to save Book : {}", book);
-        return bookRepository.save(book);
+    public BookDTO save(BookDTO bookDTO) {
+        log.debug("Request to save Book : {}", bookDTO);
+        Book book = bookMapper.toEntity(bookDTO);
+        book = bookRepository.save(book);
+        return bookMapper.toDto(book);
     }
 
     @Override
-    public Book update(Book book) {
-        log.debug("Request to update Book : {}", book);
-        return bookRepository.save(book);
+    public BookDTO update(BookDTO bookDTO) {
+        log.debug("Request to update Book : {}", bookDTO);
+        Book book = bookMapper.toEntity(bookDTO);
+        book = bookRepository.save(book);
+        return bookMapper.toDto(book);
     }
 
     @Override
-    public Optional<Book> partialUpdate(Book book) {
-        log.debug("Request to partially update Book : {}", book);
+    public Optional<BookDTO> partialUpdate(BookDTO bookDTO) {
+        log.debug("Request to partially update Book : {}", bookDTO);
 
         return bookRepository
-            .findById(book.getId())
+            .findById(bookDTO.getId())
             .map(existingBook -> {
-                if (book.getIsbn() != null) {
-                    existingBook.setIsbn(book.getIsbn());
-                }
-                if (book.getName() != null) {
-                    existingBook.setName(book.getName());
-                }
-                if (book.getPublishYear() != null) {
-                    existingBook.setPublishYear(book.getPublishYear());
-                }
-                if (book.getCopies() != null) {
-                    existingBook.setCopies(book.getCopies());
-                }
-                if (book.getCover() != null) {
-                    existingBook.setCover(book.getCover());
-                }
-                if (book.getCoverContentType() != null) {
-                    existingBook.setCoverContentType(book.getCoverContentType());
-                }
+                bookMapper.partialUpdate(existingBook, bookDTO);
 
                 return existingBook;
             })
-            .map(bookRepository::save);
+            .map(bookRepository::save)
+            .map(bookMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Book> findAll(Pageable pageable) {
+    public Page<BookDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Books");
-        return bookRepository.findAll(pageable);
+        return bookRepository.findAll(pageable).map(bookMapper::toDto);
     }
 
-    public Page<Book> findAllWithEagerRelationships(Pageable pageable) {
-        return bookRepository.findAllWithEagerRelationships(pageable);
+    public Page<BookDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return bookRepository.findAllWithEagerRelationships(pageable).map(bookMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Book> findOne(Long id) {
+    public Optional<BookDTO> findOne(Long id) {
         log.debug("Request to get Book : {}", id);
-        return bookRepository.findOneWithEagerRelationships(id);
+        return bookRepository.findOneWithEagerRelationships(id).map(bookMapper::toDto);
     }
 
     @Override

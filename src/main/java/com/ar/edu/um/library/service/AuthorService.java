@@ -1,37 +1,37 @@
 package com.ar.edu.um.library.service;
 
-import com.ar.edu.um.library.domain.Author;
+import com.ar.edu.um.library.service.dto.AuthorDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Service Interface for managing {@link Author}.
+ * Service Interface for managing {@link com.ar.edu.um.library.domain.Author}.
  */
 public interface AuthorService {
     /**
      * Save a author.
      *
-     * @param author the entity to save.
+     * @param authorDTO the entity to save.
      * @return the persisted entity.
      */
-    Author save(Author author);
+    AuthorDTO save(AuthorDTO authorDTO);
 
     /**
      * Updates a author.
      *
-     * @param author the entity to update.
+     * @param authorDTO the entity to update.
      * @return the persisted entity.
      */
-    Author update(Author author);
+    AuthorDTO update(AuthorDTO authorDTO);
 
     /**
      * Partially updates a author.
      *
-     * @param author the entity to update partially.
+     * @param authorDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<Author> partialUpdate(Author author);
+    Optional<AuthorDTO> partialUpdate(AuthorDTO authorDTO);
 
     /**
      * Get all the authors.
@@ -39,7 +39,7 @@ public interface AuthorService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<Author> findAll(Pageable pageable);
+    Page<AuthorDTO> findAll(Pageable pageable);
 
     /**
      * Get the "id" author.
@@ -47,7 +47,7 @@ public interface AuthorService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<Author> findOne(Long id);
+    Optional<AuthorDTO> findOne(Long id);
 
     /**
      * Delete the "id" author.

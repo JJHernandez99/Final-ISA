@@ -4,6 +4,8 @@ import com.ar.edu.um.library.domain.*; // for static metamodels
 import com.ar.edu.um.library.domain.Client;
 import com.ar.edu.um.library.repository.ClientRepository;
 import com.ar.edu.um.library.service.criteria.ClientCriteria;
+import com.ar.edu.um.library.service.dto.ClientDTO;
+import com.ar.edu.um.library.service.mapper.ClientMapper;
 import java.util.List;
 import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Client} entities in the database.
  * The main input is a {@link ClientCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link Client} or a {@link Page} of {@link Client} which fulfills the criteria.
+ * It returns a {@link List} of {@link ClientDTO} or a {@link Page} of {@link ClientDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -29,33 +31,36 @@ public class ClientQueryService extends QueryService<Client> {
 
     private final ClientRepository clientRepository;
 
-    public ClientQueryService(ClientRepository clientRepository) {
+    private final ClientMapper clientMapper;
+
+    public ClientQueryService(ClientRepository clientRepository, ClientMapper clientMapper) {
         this.clientRepository = clientRepository;
+        this.clientMapper = clientMapper;
     }
 
     /**
-     * Return a {@link List} of {@link Client} which matches the criteria from the database.
+     * Return a {@link List} of {@link ClientDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<Client> findByCriteria(ClientCriteria criteria) {
+    public List<ClientDTO> findByCriteria(ClientCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Client> specification = createSpecification(criteria);
-        return clientRepository.findAll(specification);
+        return clientMapper.toDto(clientRepository.findAll(specification));
     }
 
     /**
-     * Return a {@link Page} of {@link Client} which matches the criteria from the database.
+     * Return a {@link Page} of {@link ClientDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<Client> findByCriteria(ClientCriteria criteria, Pageable page) {
+    public Page<ClientDTO> findByCriteria(ClientCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Client> specification = createSpecification(criteria);
-        return clientRepository.findAll(specification, page);
+        return clientRepository.findAll(specification, page).map(clientMapper::toDto);
     }
 
     /**

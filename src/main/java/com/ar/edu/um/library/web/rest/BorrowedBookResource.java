@@ -1,10 +1,10 @@
 package com.ar.edu.um.library.web.rest;
 
-import com.ar.edu.um.library.domain.BorrowedBook;
 import com.ar.edu.um.library.repository.BorrowedBookRepository;
 import com.ar.edu.um.library.service.BorrowedBookQueryService;
 import com.ar.edu.um.library.service.BorrowedBookService;
 import com.ar.edu.um.library.service.criteria.BorrowedBookCriteria;
+import com.ar.edu.um.library.service.dto.BorrowedBookDTO;
 import com.ar.edu.um.library.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,17 +57,17 @@ public class BorrowedBookResource {
     /**
      * {@code POST  /borrowed-books} : Create a new borrowedBook.
      *
-     * @param borrowedBook the borrowedBook to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new borrowedBook, or with status {@code 400 (Bad Request)} if the borrowedBook has already an ID.
+     * @param borrowedBookDTO the borrowedBookDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new borrowedBookDTO, or with status {@code 400 (Bad Request)} if the borrowedBook has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/borrowed-books")
-    public ResponseEntity<BorrowedBook> createBorrowedBook(@RequestBody BorrowedBook borrowedBook) throws URISyntaxException {
-        log.debug("REST request to save BorrowedBook : {}", borrowedBook);
-        if (borrowedBook.getId() != null) {
+    public ResponseEntity<BorrowedBookDTO> createBorrowedBook(@RequestBody BorrowedBookDTO borrowedBookDTO) throws URISyntaxException {
+        log.debug("REST request to save BorrowedBook : {}", borrowedBookDTO);
+        if (borrowedBookDTO.getId() != null) {
             throw new BadRequestAlertException("A new borrowedBook cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        BorrowedBook result = borrowedBookService.save(borrowedBook);
+        BorrowedBookDTO result = borrowedBookService.save(borrowedBookDTO);
         return ResponseEntity
             .created(new URI("/api/borrowed-books/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -77,23 +77,23 @@ public class BorrowedBookResource {
     /**
      * {@code PUT  /borrowed-books/:id} : Updates an existing borrowedBook.
      *
-     * @param id the id of the borrowedBook to save.
-     * @param borrowedBook the borrowedBook to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated borrowedBook,
-     * or with status {@code 400 (Bad Request)} if the borrowedBook is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the borrowedBook couldn't be updated.
+     * @param id the id of the borrowedBookDTO to save.
+     * @param borrowedBookDTO the borrowedBookDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated borrowedBookDTO,
+     * or with status {@code 400 (Bad Request)} if the borrowedBookDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the borrowedBookDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/borrowed-books/{id}")
-    public ResponseEntity<BorrowedBook> updateBorrowedBook(
+    public ResponseEntity<BorrowedBookDTO> updateBorrowedBook(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody BorrowedBook borrowedBook
+        @RequestBody BorrowedBookDTO borrowedBookDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update BorrowedBook : {}, {}", id, borrowedBook);
-        if (borrowedBook.getId() == null) {
+        log.debug("REST request to update BorrowedBook : {}, {}", id, borrowedBookDTO);
+        if (borrowedBookDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, borrowedBook.getId())) {
+        if (!Objects.equals(id, borrowedBookDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -101,34 +101,34 @@ public class BorrowedBookResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        BorrowedBook result = borrowedBookService.update(borrowedBook);
+        BorrowedBookDTO result = borrowedBookService.update(borrowedBookDTO);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, borrowedBook.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, borrowedBookDTO.getId().toString()))
             .body(result);
     }
 
     /**
      * {@code PATCH  /borrowed-books/:id} : Partial updates given fields of an existing borrowedBook, field will ignore if it is null
      *
-     * @param id the id of the borrowedBook to save.
-     * @param borrowedBook the borrowedBook to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated borrowedBook,
-     * or with status {@code 400 (Bad Request)} if the borrowedBook is not valid,
-     * or with status {@code 404 (Not Found)} if the borrowedBook is not found,
-     * or with status {@code 500 (Internal Server Error)} if the borrowedBook couldn't be updated.
+     * @param id the id of the borrowedBookDTO to save.
+     * @param borrowedBookDTO the borrowedBookDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated borrowedBookDTO,
+     * or with status {@code 400 (Bad Request)} if the borrowedBookDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the borrowedBookDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the borrowedBookDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/borrowed-books/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<BorrowedBook> partialUpdateBorrowedBook(
+    public ResponseEntity<BorrowedBookDTO> partialUpdateBorrowedBook(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody BorrowedBook borrowedBook
+        @RequestBody BorrowedBookDTO borrowedBookDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update BorrowedBook partially : {}, {}", id, borrowedBook);
-        if (borrowedBook.getId() == null) {
+        log.debug("REST request to partial update BorrowedBook partially : {}, {}", id, borrowedBookDTO);
+        if (borrowedBookDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, borrowedBook.getId())) {
+        if (!Objects.equals(id, borrowedBookDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -136,11 +136,11 @@ public class BorrowedBookResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<BorrowedBook> result = borrowedBookService.partialUpdate(borrowedBook);
+        Optional<BorrowedBookDTO> result = borrowedBookService.partialUpdate(borrowedBookDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, borrowedBook.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, borrowedBookDTO.getId().toString())
         );
     }
 
@@ -152,12 +152,12 @@ public class BorrowedBookResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of borrowedBooks in body.
      */
     @GetMapping("/borrowed-books")
-    public ResponseEntity<List<BorrowedBook>> getAllBorrowedBooks(
+    public ResponseEntity<List<BorrowedBookDTO>> getAllBorrowedBooks(
         BorrowedBookCriteria criteria,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get BorrowedBooks by criteria: {}", criteria);
-        Page<BorrowedBook> page = borrowedBookQueryService.findByCriteria(criteria, pageable);
+        Page<BorrowedBookDTO> page = borrowedBookQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -177,20 +177,20 @@ public class BorrowedBookResource {
     /**
      * {@code GET  /borrowed-books/:id} : get the "id" borrowedBook.
      *
-     * @param id the id of the borrowedBook to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the borrowedBook, or with status {@code 404 (Not Found)}.
+     * @param id the id of the borrowedBookDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the borrowedBookDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/borrowed-books/{id}")
-    public ResponseEntity<BorrowedBook> getBorrowedBook(@PathVariable Long id) {
+    public ResponseEntity<BorrowedBookDTO> getBorrowedBook(@PathVariable Long id) {
         log.debug("REST request to get BorrowedBook : {}", id);
-        Optional<BorrowedBook> borrowedBook = borrowedBookService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(borrowedBook);
+        Optional<BorrowedBookDTO> borrowedBookDTO = borrowedBookService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(borrowedBookDTO);
     }
 
     /**
      * {@code DELETE  /borrowed-books/:id} : delete the "id" borrowedBook.
      *
-     * @param id the id of the borrowedBook to delete.
+     * @param id the id of the borrowedBookDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/borrowed-books/{id}")

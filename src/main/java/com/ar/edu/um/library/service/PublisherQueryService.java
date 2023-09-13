@@ -4,6 +4,8 @@ import com.ar.edu.um.library.domain.*; // for static metamodels
 import com.ar.edu.um.library.domain.Publisher;
 import com.ar.edu.um.library.repository.PublisherRepository;
 import com.ar.edu.um.library.service.criteria.PublisherCriteria;
+import com.ar.edu.um.library.service.dto.PublisherDTO;
+import com.ar.edu.um.library.service.mapper.PublisherMapper;
 import java.util.List;
 import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Publisher} entities in the database.
  * The main input is a {@link PublisherCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link Publisher} or a {@link Page} of {@link Publisher} which fulfills the criteria.
+ * It returns a {@link List} of {@link PublisherDTO} or a {@link Page} of {@link PublisherDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -29,33 +31,36 @@ public class PublisherQueryService extends QueryService<Publisher> {
 
     private final PublisherRepository publisherRepository;
 
-    public PublisherQueryService(PublisherRepository publisherRepository) {
+    private final PublisherMapper publisherMapper;
+
+    public PublisherQueryService(PublisherRepository publisherRepository, PublisherMapper publisherMapper) {
         this.publisherRepository = publisherRepository;
+        this.publisherMapper = publisherMapper;
     }
 
     /**
-     * Return a {@link List} of {@link Publisher} which matches the criteria from the database.
+     * Return a {@link List} of {@link PublisherDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<Publisher> findByCriteria(PublisherCriteria criteria) {
+    public List<PublisherDTO> findByCriteria(PublisherCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Publisher> specification = createSpecification(criteria);
-        return publisherRepository.findAll(specification);
+        return publisherMapper.toDto(publisherRepository.findAll(specification));
     }
 
     /**
-     * Return a {@link Page} of {@link Publisher} which matches the criteria from the database.
+     * Return a {@link Page} of {@link PublisherDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<Publisher> findByCriteria(PublisherCriteria criteria, Pageable page) {
+    public Page<PublisherDTO> findByCriteria(PublisherCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Publisher> specification = createSpecification(criteria);
-        return publisherRepository.findAll(specification, page);
+        return publisherRepository.findAll(specification, page).map(publisherMapper::toDto);
     }
 
     /**

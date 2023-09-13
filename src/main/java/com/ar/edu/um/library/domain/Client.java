@@ -3,15 +3,12 @@ package com.ar.edu.um.library.domain;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Client.
  */
 @Entity
 @Table(name = "client")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Client implements Serializable {
 

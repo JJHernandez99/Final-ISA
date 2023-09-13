@@ -3,6 +3,8 @@ package com.ar.edu.um.library.service.impl;
 import com.ar.edu.um.library.domain.BorrowedBook;
 import com.ar.edu.um.library.repository.BorrowedBookRepository;
 import com.ar.edu.um.library.service.BorrowedBookService;
+import com.ar.edu.um.library.service.dto.BorrowedBookDTO;
+import com.ar.edu.um.library.service.mapper.BorrowedBookMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,54 +24,60 @@ public class BorrowedBookServiceImpl implements BorrowedBookService {
 
     private final BorrowedBookRepository borrowedBookRepository;
 
-    public BorrowedBookServiceImpl(BorrowedBookRepository borrowedBookRepository) {
+    private final BorrowedBookMapper borrowedBookMapper;
+
+    public BorrowedBookServiceImpl(BorrowedBookRepository borrowedBookRepository, BorrowedBookMapper borrowedBookMapper) {
         this.borrowedBookRepository = borrowedBookRepository;
+        this.borrowedBookMapper = borrowedBookMapper;
     }
 
     @Override
-    public BorrowedBook save(BorrowedBook borrowedBook) {
-        log.debug("Request to save BorrowedBook : {}", borrowedBook);
-        return borrowedBookRepository.save(borrowedBook);
+    public BorrowedBookDTO save(BorrowedBookDTO borrowedBookDTO) {
+        log.debug("Request to save BorrowedBook : {}", borrowedBookDTO);
+        BorrowedBook borrowedBook = borrowedBookMapper.toEntity(borrowedBookDTO);
+        borrowedBook = borrowedBookRepository.save(borrowedBook);
+        return borrowedBookMapper.toDto(borrowedBook);
     }
 
     @Override
-    public BorrowedBook update(BorrowedBook borrowedBook) {
-        log.debug("Request to update BorrowedBook : {}", borrowedBook);
-        return borrowedBookRepository.save(borrowedBook);
+    public BorrowedBookDTO update(BorrowedBookDTO borrowedBookDTO) {
+        log.debug("Request to update BorrowedBook : {}", borrowedBookDTO);
+        BorrowedBook borrowedBook = borrowedBookMapper.toEntity(borrowedBookDTO);
+        borrowedBook = borrowedBookRepository.save(borrowedBook);
+        return borrowedBookMapper.toDto(borrowedBook);
     }
 
     @Override
-    public Optional<BorrowedBook> partialUpdate(BorrowedBook borrowedBook) {
-        log.debug("Request to partially update BorrowedBook : {}", borrowedBook);
+    public Optional<BorrowedBookDTO> partialUpdate(BorrowedBookDTO borrowedBookDTO) {
+        log.debug("Request to partially update BorrowedBook : {}", borrowedBookDTO);
 
         return borrowedBookRepository
-            .findById(borrowedBook.getId())
+            .findById(borrowedBookDTO.getId())
             .map(existingBorrowedBook -> {
-                if (borrowedBook.getBorrowDate() != null) {
-                    existingBorrowedBook.setBorrowDate(borrowedBook.getBorrowDate());
-                }
+                borrowedBookMapper.partialUpdate(existingBorrowedBook, borrowedBookDTO);
 
                 return existingBorrowedBook;
             })
-            .map(borrowedBookRepository::save);
+            .map(borrowedBookRepository::save)
+            .map(borrowedBookMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<BorrowedBook> findAll(Pageable pageable) {
+    public Page<BorrowedBookDTO> findAll(Pageable pageable) {
         log.debug("Request to get all BorrowedBooks");
-        return borrowedBookRepository.findAll(pageable);
+        return borrowedBookRepository.findAll(pageable).map(borrowedBookMapper::toDto);
     }
 
-    public Page<BorrowedBook> findAllWithEagerRelationships(Pageable pageable) {
-        return borrowedBookRepository.findAllWithEagerRelationships(pageable);
+    public Page<BorrowedBookDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return borrowedBookRepository.findAllWithEagerRelationships(pageable).map(borrowedBookMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<BorrowedBook> findOne(Long id) {
+    public Optional<BorrowedBookDTO> findOne(Long id) {
         log.debug("Request to get BorrowedBook : {}", id);
-        return borrowedBookRepository.findOneWithEagerRelationships(id);
+        return borrowedBookRepository.findOneWithEagerRelationships(id).map(borrowedBookMapper::toDto);
     }
 
     @Override

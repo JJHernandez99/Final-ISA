@@ -4,6 +4,8 @@ import com.ar.edu.um.library.domain.*; // for static metamodels
 import com.ar.edu.um.library.domain.BorrowedBook;
 import com.ar.edu.um.library.repository.BorrowedBookRepository;
 import com.ar.edu.um.library.service.criteria.BorrowedBookCriteria;
+import com.ar.edu.um.library.service.dto.BorrowedBookDTO;
+import com.ar.edu.um.library.service.mapper.BorrowedBookMapper;
 import java.util.List;
 import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link BorrowedBook} entities in the database.
  * The main input is a {@link BorrowedBookCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link BorrowedBook} or a {@link Page} of {@link BorrowedBook} which fulfills the criteria.
+ * It returns a {@link List} of {@link BorrowedBookDTO} or a {@link Page} of {@link BorrowedBookDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -29,33 +31,36 @@ public class BorrowedBookQueryService extends QueryService<BorrowedBook> {
 
     private final BorrowedBookRepository borrowedBookRepository;
 
-    public BorrowedBookQueryService(BorrowedBookRepository borrowedBookRepository) {
+    private final BorrowedBookMapper borrowedBookMapper;
+
+    public BorrowedBookQueryService(BorrowedBookRepository borrowedBookRepository, BorrowedBookMapper borrowedBookMapper) {
         this.borrowedBookRepository = borrowedBookRepository;
+        this.borrowedBookMapper = borrowedBookMapper;
     }
 
     /**
-     * Return a {@link List} of {@link BorrowedBook} which matches the criteria from the database.
+     * Return a {@link List} of {@link BorrowedBookDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<BorrowedBook> findByCriteria(BorrowedBookCriteria criteria) {
+    public List<BorrowedBookDTO> findByCriteria(BorrowedBookCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<BorrowedBook> specification = createSpecification(criteria);
-        return borrowedBookRepository.findAll(specification);
+        return borrowedBookMapper.toDto(borrowedBookRepository.findAll(specification));
     }
 
     /**
-     * Return a {@link Page} of {@link BorrowedBook} which matches the criteria from the database.
+     * Return a {@link Page} of {@link BorrowedBookDTO} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<BorrowedBook> findByCriteria(BorrowedBookCriteria criteria, Pageable page) {
+    public Page<BorrowedBookDTO> findByCriteria(BorrowedBookCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<BorrowedBook> specification = createSpecification(criteria);
-        return borrowedBookRepository.findAll(specification, page);
+        return borrowedBookRepository.findAll(specification, page).map(borrowedBookMapper::toDto);
     }
 
     /**

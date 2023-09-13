@@ -1,10 +1,10 @@
 package com.ar.edu.um.library.web.rest;
 
-import com.ar.edu.um.library.domain.Author;
 import com.ar.edu.um.library.repository.AuthorRepository;
 import com.ar.edu.um.library.service.AuthorQueryService;
 import com.ar.edu.um.library.service.AuthorService;
 import com.ar.edu.um.library.service.criteria.AuthorCriteria;
+import com.ar.edu.um.library.service.dto.AuthorDTO;
 import com.ar.edu.um.library.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -55,17 +55,17 @@ public class AuthorResource {
     /**
      * {@code POST  /authors} : Create a new author.
      *
-     * @param author the author to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new author, or with status {@code 400 (Bad Request)} if the author has already an ID.
+     * @param authorDTO the authorDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new authorDTO, or with status {@code 400 (Bad Request)} if the author has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/authors")
-    public ResponseEntity<Author> createAuthor(@Valid @RequestBody Author author) throws URISyntaxException {
-        log.debug("REST request to save Author : {}", author);
-        if (author.getId() != null) {
+    public ResponseEntity<AuthorDTO> createAuthor(@Valid @RequestBody AuthorDTO authorDTO) throws URISyntaxException {
+        log.debug("REST request to save Author : {}", authorDTO);
+        if (authorDTO.getId() != null) {
             throw new BadRequestAlertException("A new author cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Author result = authorService.save(author);
+        AuthorDTO result = authorService.save(authorDTO);
         return ResponseEntity
             .created(new URI("/api/authors/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -75,23 +75,23 @@ public class AuthorResource {
     /**
      * {@code PUT  /authors/:id} : Updates an existing author.
      *
-     * @param id the id of the author to save.
-     * @param author the author to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated author,
-     * or with status {@code 400 (Bad Request)} if the author is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the author couldn't be updated.
+     * @param id the id of the authorDTO to save.
+     * @param authorDTO the authorDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated authorDTO,
+     * or with status {@code 400 (Bad Request)} if the authorDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the authorDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/authors/{id}")
-    public ResponseEntity<Author> updateAuthor(
+    public ResponseEntity<AuthorDTO> updateAuthor(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody Author author
+        @Valid @RequestBody AuthorDTO authorDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Author : {}, {}", id, author);
-        if (author.getId() == null) {
+        log.debug("REST request to update Author : {}, {}", id, authorDTO);
+        if (authorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, author.getId())) {
+        if (!Objects.equals(id, authorDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -99,34 +99,34 @@ public class AuthorResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Author result = authorService.update(author);
+        AuthorDTO result = authorService.update(authorDTO);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, author.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, authorDTO.getId().toString()))
             .body(result);
     }
 
     /**
      * {@code PATCH  /authors/:id} : Partial updates given fields of an existing author, field will ignore if it is null
      *
-     * @param id the id of the author to save.
-     * @param author the author to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated author,
-     * or with status {@code 400 (Bad Request)} if the author is not valid,
-     * or with status {@code 404 (Not Found)} if the author is not found,
-     * or with status {@code 500 (Internal Server Error)} if the author couldn't be updated.
+     * @param id the id of the authorDTO to save.
+     * @param authorDTO the authorDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated authorDTO,
+     * or with status {@code 400 (Bad Request)} if the authorDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the authorDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the authorDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/authors/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<Author> partialUpdateAuthor(
+    public ResponseEntity<AuthorDTO> partialUpdateAuthor(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody Author author
+        @NotNull @RequestBody AuthorDTO authorDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Author partially : {}, {}", id, author);
-        if (author.getId() == null) {
+        log.debug("REST request to partial update Author partially : {}, {}", id, authorDTO);
+        if (authorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, author.getId())) {
+        if (!Objects.equals(id, authorDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -134,11 +134,11 @@ public class AuthorResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Author> result = authorService.partialUpdate(author);
+        Optional<AuthorDTO> result = authorService.partialUpdate(authorDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, author.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, authorDTO.getId().toString())
         );
     }
 
@@ -150,12 +150,12 @@ public class AuthorResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of authors in body.
      */
     @GetMapping("/authors")
-    public ResponseEntity<List<Author>> getAllAuthors(
+    public ResponseEntity<List<AuthorDTO>> getAllAuthors(
         AuthorCriteria criteria,
         @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get Authors by criteria: {}", criteria);
-        Page<Author> page = authorQueryService.findByCriteria(criteria, pageable);
+        Page<AuthorDTO> page = authorQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -175,20 +175,20 @@ public class AuthorResource {
     /**
      * {@code GET  /authors/:id} : get the "id" author.
      *
-     * @param id the id of the author to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the author, or with status {@code 404 (Not Found)}.
+     * @param id the id of the authorDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the authorDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/authors/{id}")
-    public ResponseEntity<Author> getAuthor(@PathVariable Long id) {
+    public ResponseEntity<AuthorDTO> getAuthor(@PathVariable Long id) {
         log.debug("REST request to get Author : {}", id);
-        Optional<Author> author = authorService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(author);
+        Optional<AuthorDTO> authorDTO = authorService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(authorDTO);
     }
 
     /**
      * {@code DELETE  /authors/:id} : delete the "id" author.
      *
-     * @param id the id of the author to delete.
+     * @param id the id of the authorDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/authors/{id}")

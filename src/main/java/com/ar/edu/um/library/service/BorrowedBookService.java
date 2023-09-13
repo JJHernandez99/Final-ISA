@@ -1,37 +1,37 @@
 package com.ar.edu.um.library.service;
 
-import com.ar.edu.um.library.domain.BorrowedBook;
+import com.ar.edu.um.library.service.dto.BorrowedBookDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Service Interface for managing {@link BorrowedBook}.
+ * Service Interface for managing {@link com.ar.edu.um.library.domain.BorrowedBook}.
  */
 public interface BorrowedBookService {
     /**
      * Save a borrowedBook.
      *
-     * @param borrowedBook the entity to save.
+     * @param borrowedBookDTO the entity to save.
      * @return the persisted entity.
      */
-    BorrowedBook save(BorrowedBook borrowedBook);
+    BorrowedBookDTO save(BorrowedBookDTO borrowedBookDTO);
 
     /**
      * Updates a borrowedBook.
      *
-     * @param borrowedBook the entity to update.
+     * @param borrowedBookDTO the entity to update.
      * @return the persisted entity.
      */
-    BorrowedBook update(BorrowedBook borrowedBook);
+    BorrowedBookDTO update(BorrowedBookDTO borrowedBookDTO);
 
     /**
      * Partially updates a borrowedBook.
      *
-     * @param borrowedBook the entity to update partially.
+     * @param borrowedBookDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<BorrowedBook> partialUpdate(BorrowedBook borrowedBook);
+    Optional<BorrowedBookDTO> partialUpdate(BorrowedBookDTO borrowedBookDTO);
 
     /**
      * Get all the borrowedBooks.
@@ -39,7 +39,7 @@ public interface BorrowedBookService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<BorrowedBook> findAll(Pageable pageable);
+    Page<BorrowedBookDTO> findAll(Pageable pageable);
 
     /**
      * Get all the borrowedBooks with eager load of many-to-many relationships.
@@ -47,7 +47,7 @@ public interface BorrowedBookService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<BorrowedBook> findAllWithEagerRelationships(Pageable pageable);
+    Page<BorrowedBookDTO> findAllWithEagerRelationships(Pageable pageable);
 
     /**
      * Get the "id" borrowedBook.
@@ -55,7 +55,7 @@ public interface BorrowedBookService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<BorrowedBook> findOne(Long id);
+    Optional<BorrowedBookDTO> findOne(Long id);
 
     /**
      * Delete the "id" borrowedBook.
