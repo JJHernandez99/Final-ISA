@@ -10,6 +10,13 @@ import javax.validation.constraints.*;
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class AuthorDTO implements Serializable {
 
+    public AuthorDTO(Long id, String firstName) {
+        this.id = id;
+        this.firstName = firstName;
+    }
+
+    public AuthorDTO() {}
+
     private Long id;
 
     @NotNull
