@@ -3,7 +3,7 @@ version: '3.8'
 services:
   library-app:
     container_name: app
-    image: library
+    image: jjhernandez99/final-isa-library
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs
