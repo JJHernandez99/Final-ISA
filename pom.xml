@@ -581,16 +581,16 @@
                                 </platform>
                             </platforms>
                         </from>
-                        <!-- <to>
+                        <to>
                             <image>jjhernandez99/final-isa-library:latest</image>
                             <auth>
                                 <username>${DOCKER_REGISTRY_USER}</username>
                                 <password>${DOCKER_REGISTRY_PWD}</password>
                             </auth>
                         </to>
-                        <to>
+                        <!-- <to>
                             <image>library:latest</image>
-                        </to> -->
+                        </to>  -->
                         <container>
                             <entrypoint>
                                 <shell>bash</shell>
