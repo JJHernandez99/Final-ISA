@@ -1,0 +1,10 @@
+version: '3.8'
+name: jenkins
+services:
+  jenkins:
+    container_name: jenkins
+    build:
+      context: ./jenkins-arm64/
+      dockerfile: Dockerfile
+    ports:
+      - 8090:8080
